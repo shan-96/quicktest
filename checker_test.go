@@ -63,6 +63,8 @@ type OuterJSON struct {
 
 type boolean bool
 
+type stringAlias string
+
 var checkerTests = []struct {
 	about                 string
 	checker               qt.Checker
@@ -178,6 +180,23 @@ got:
   int(42)
 want:
   "42"
+`,
+}, {
+	about:   "Equals: string alias with same value shows type hint",
+	checker: qt.Equals,
+	got:     stringAlias("CONSTANT"),
+	args:    []interface{}{"CONSTANT"},
+	expectedCheckFailure: `
+error:
+  values are not equal
+got type:
+  quicktest_test.stringAlias
+want type:
+  string
+got:
+  "CONSTANT"
+want:
+  <same as "got">
 `,
 }, {
 	about:   "Equals: nil and nil",

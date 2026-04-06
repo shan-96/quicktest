@@ -100,6 +100,17 @@ func (c *equalsChecker) Check(got interface{}, args []interface{}, note func(key
 		}
 	}
 
+	// Show type hint when string values are equal but have different types (e.g., a string type alias).
+	gotVal := reflect.ValueOf(got)
+	wantVal := reflect.ValueOf(want)
+	if gotVal.IsValid() && wantVal.IsValid() &&
+		gotVal.Kind() == reflect.String && wantVal.Kind() == reflect.String &&
+		reflect.TypeOf(got) != reflect.TypeOf(want) &&
+		gotVal.String() == wantVal.String() {
+		note("got type", Unquoted(reflect.TypeOf(got).String()))
+		note("want type", Unquoted(reflect.TypeOf(want).String()))
+	}
+
 	return errors.New("values are not equal")
 }
 
