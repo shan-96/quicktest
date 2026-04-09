@@ -62,8 +62,7 @@ type OuterJSON struct {
 }
 
 type boolean bool
-
-type stringAlias string
+type myString string
 
 var checkerTests = []struct {
 	about                 string
@@ -182,21 +181,17 @@ want:
   "42"
 `,
 }, {
-	about:   "Equals: string alias with same value shows type hint",
+	about:   "Equals: string and named string type with same value",
 	checker: qt.Equals,
-	got:     stringAlias("CONSTANT"),
-	args:    []interface{}{"CONSTANT"},
+	got:     "hello",
+	args:    []interface{}{myString("hello")},
 	expectedCheckFailure: `
 error:
   values are not equal
-got type:
-  quicktest_test.stringAlias
-want type:
-  string
 got:
-  "CONSTANT"
+  "hello"
 want:
-  <same as "got">
+  quicktest_test.myString("hello")
 `,
 }, {
 	about:   "Equals: nil and nil",
